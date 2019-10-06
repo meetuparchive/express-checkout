@@ -1,0 +1,10 @@
+# https://help.github.com/en/articles/metadata-syntax-for-github-actions
+name: 'Express Checkout'
+description: 'Github Action for fast checkouts'
+author: 'softprops'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+branding:
+  color: 'green'
+  icon: 'package'
