@@ -60,9 +60,11 @@ jobs:
         run: echo ⭐ ⭐ ⭐
 ```
 
+## ⛏️Digging deeper
+
 > **⚠️ Note:** For private repositories you will want to create a new secret to store a personal access token with `repo` permissions. GitHub actions default `GITHUB_TOKEN` secret does not have the permission to clone your private repository
 
-This action will attempt to checkout a specific commit within a branch that triggered the action. To do so it may need to "deepen" the shallow checkout. This will by default deepen the checkout to 100 but you can provide a custom `max_depth` to limit the amount of times this actions tries
+This action will attempt to checkout a specific commit within a branch that triggered the action. To do so it may need to "deepen" the shallow checkout. This will by default deepen the checkout to **100**. However, you can provide a custom `max_depth` to limit the amount of depth this action will dig for your commit.
 
 ```yaml
 name: CI
