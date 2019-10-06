@@ -29,6 +29,8 @@ jobs:
         run: npm run build
       - name: Test
         run: npm run test
+      - name: Test Coverage
+        run: npm run test:coverage
       - name: "check for uncommitted changes"
         # Ensure no changes, but ignore node_modules dir since dev/fresh ci deps installed.
         run: |
