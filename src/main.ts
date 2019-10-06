@@ -46,11 +46,20 @@ interface Checkout {
   ): Promise<number>;
 }
 
-class GitCheckout implements Checkout {
+export class GitCheckout implements Checkout {
   private cloneToken: string;
   constructor(cloneToken: string) {
     this.cloneToken = cloneToken;
   }
+
+  async gitDir(): Promise<string> {
+    return (await execa("git", ["rev-parse", "--git-dir"])).stdout;
+  }
+
+  cloneString(branch: string, depth: number, repoUri: string): string {
+    return `git clone --single-branch --branch ${branch} --depth ${depth} https://${this.cloneToken}:x-oauth-basic@github.com/${repoUri}.git .`;
+  }
+
   async checkout(
     repo: { owner: string; repo: string },
     branch: string,
@@ -59,11 +68,9 @@ class GitCheckout implements Checkout {
   ): Promise<number> {
     let depth = 1;
     const repoUri = `${repo.owner}/${repo.repo}`;
-    const cloneStatus = await exec(
-      `git clone --single-branch --branch ${branch} --depth ${depth} https://${this.cloneToken}:x-oauth-basic@github.com/${repoUri}.git .`
-    );
+    const cloneStatus = await exec(this.cloneString(branch, depth, repoUri));
     if (cloneStatus > 0) {
-      const gitDir = (await execa("git", ["rev-parse", "--git-dir"])).stdout;
+      const gitDir = await this.gitDir();
       while ((await exec(`git checkout -q ${ref}`)) > 0) {
         //  When repo gets to the max depth of the origin Git silenty turns it into a deep clone
         if (!existsSync(join(gitDir, "scratch"))) {
