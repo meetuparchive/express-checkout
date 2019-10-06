@@ -12,7 +12,7 @@ jobs:
           fetch-depth: 1
       - name: Install
         run: npm ci
-      - name: Build
+      - name: Format
         run: npm run check:fmt
   build:
     runs-on: ubuntu-latest
