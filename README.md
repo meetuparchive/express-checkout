@@ -43,17 +43,39 @@ Would take upwards of 6 to 7 minutes _before_ CI could do anything useful. With 
 
 ## usage
 
+
 In a workflow for example, say `.github/workflows/ci.yml` add the following.
 
 ```yaml
 name: CI
 jobs:
   test:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: meetup/express-checkout@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Test
+        run: echo ⭐ ⭐ ⭐
+```
+
+> **⚠️ Note:** For private repositories you will want to create a new secret to store a personal access token with `repo` permissions. GitHub actions default `GITHUB_TOKEN` secret does not have the permission to clone your private repository
+
+This action will attempt to checkout a specific commit within a branch that triggered the action. To do so it may need to "deepen" the shallow checkout. This will by default deepen the checkout to 100 but you can provide a custom `max_depth` to limit the amount of times this actions tries
+
+```yaml
+name: CI
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: meetup/express-checkout@v1
+        with:
+          max_depth: 5
+        env:
+          GITHUB_TOKEN: ${{ secrets.CLONE_TOKEN }}
       - name: Test
         run: echo ⭐ ⭐ ⭐
 ```
