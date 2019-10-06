@@ -53,7 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: meetup/express-checkout@v1
+        uses: meetup/express-checkout@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Test
@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: meetup/express-checkout@v1
+        uses: meetup/express-checkout@master
         with:
           max_depth: 5
         env:
