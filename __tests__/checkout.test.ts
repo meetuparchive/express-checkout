@@ -3,7 +3,7 @@ import { GitCheckout } from "../src/checkout";
 
 describe("checkout", () => {
   describe("GitCheckout", () => {
-    describe("gitDir", async () => {
+    describe("gitDir", () => {
       it("is typically just .git", async () => {
         assert.equal(await new GitCheckout("s3cr3t").gitDir(), ".git");
       });
