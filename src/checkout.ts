@@ -9,7 +9,8 @@ export interface Checkout {
     repo: { owner: string; repo: string },
     branch: string,
     ref: string,
-    maxDepth: number | undefined
+    maxDepth: number | undefined,
+    destination: string
   ): Promise<number>;
 }
 
@@ -23,19 +24,27 @@ export class GitCheckout implements Checkout {
     return (await execa("git", ["rev-parse", "--git-dir"])).stdout;
   }
 
-  cloneString(branch: string, depth: number, repoUri: string): string {
-    return `git clone --single-branch --branch ${branch} --depth ${depth} https://${this.cloneToken}:x-oauth-basic@github.com/${repoUri}.git .`;
+  cloneString(
+    branch: string,
+    depth: number,
+    repoUri: string,
+    desitination: string
+  ): string {
+    return `git clone --single-branch --branch ${branch} --depth ${depth} https://${this.cloneToken}:x-oauth-basic@github.com/${repoUri}.git ${desitination}`;
   }
 
   async checkout(
     repo: { owner: string; repo: string },
     branch: string,
     ref: string,
-    maxDepth: number | undefined
+    maxDepth: number | undefined,
+    desitination: string
   ): Promise<number> {
     let depth = 1;
     const repoUri = `${repo.owner}/${repo.repo}`;
-    const cloneStatus = await exec(this.cloneString(branch, depth, repoUri));
+    const cloneStatus = await exec(
+      this.cloneString(branch, depth, repoUri, desitination)
+    );
     if (cloneStatus > 0) {
       const gitDir = await this.gitDir();
       while ((await exec(`git checkout -q ${ref}`)) > 0) {

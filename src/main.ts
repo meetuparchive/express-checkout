@@ -37,7 +37,7 @@ export const extract = (env: Env, context: Context): Config => {
 const run = async (): Promise<void> => {
   try {
     const { checkout, repo, branch, ref, maxDepth } = extract(env, context);
-    const status = await checkout.checkout(repo, branch, ref, maxDepth);
+    const status = await checkout.checkout(repo, branch, ref, maxDepth, ".");
     if (status > 0) {
       throw new Error(
         `Failed to checkout ${repo.owner}/${repo.repo}@${branch}`

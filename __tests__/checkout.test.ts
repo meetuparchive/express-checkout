@@ -14,7 +14,8 @@ describe("checkout", () => {
           new GitCheckout("s3cr3t").cloneString(
             "master",
             1,
-            "meetup/express-checkout"
+            "meetup/express-checkout",
+            "."
           ),
           `git clone --single-branch --branch master --depth 1 https://s3cr3t:x-oauth-basic@github.com/meetup/express-checkout.git .`
         );
