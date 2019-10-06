@@ -4,6 +4,7 @@ import { exec } from "@actions/exec";
 import { env } from "process";
 import { existsSync } from "fs";
 import { join } from "path";
+import execa from "execa";
 
 type Env = { [key: string]: string | undefined };
 type Repo = { owner: string; repo: string };
@@ -56,24 +57,28 @@ class GitCheckout implements Checkout {
     ref: string,
     maxDepth: number | undefined
   ): Promise<number> {
+    let depth = 1;
+    const repoUri = `${repo.owner}/${repo.repo}`;
     const cloneStatus = await exec(
-      `git clone --single-branch --branch ${branch} --depth 1 https://${this.cloneToken}:x-oauth-basic@github.com/${repo.owner}/${repo.repo}.git .`
+      `git clone --single-branch --branch ${branch} --depth ${depth} https://${this.cloneToken}:x-oauth-basic@github.com/${repoUri}.git .`
     );
     if (cloneStatus > 0) {
-      //const gitDir = await exec(`git rev-parse --git-dir`);
-      let depth = 1;
+      const gitDir = (await execa("git", ["rev-parse", "--git-dir"])).stdout;
       while ((await exec(`git checkout -q ${ref}`)) > 0) {
         //  When repo gets to the max depth of the origin Git silenty turns it into a deep clone
-        if (!existsSync(join("scratch"))) {
-          debug("reached maximum depth");
+        if (!existsSync(join(gitDir, "scratch"))) {
+          debug("Reached checkout maximum depth");
           return 0;
         }
         depth += 2;
         if (maxDepth && depth > maxDepth) {
           throw new Error(
-            `exceeded max checkout depth of ${maxDepth} finding commit ${ref} in ${context.repo}@${branch}`
+            `Exceeded max checkout depth of ${maxDepth} finding commit ${ref} in ${context.repo}@${branch}`
           );
         }
+        debug(
+          `🤿 Could not find ref ${ref} in ${repoUri}@${branch}. Going deeper...`
+        );
         await exec(`git fetch --depth ${depth} origin`);
       }
     }
@@ -87,11 +92,11 @@ const run = async (): Promise<void> => {
     const status = await checkout.checkout(repo, branch, ref, maxDepth);
     if (status > 0) {
       throw new Error(
-        `failed to checkout ${repo.owner}/${repo.repo}@${branch}`
+        `Failed to checkout ${repo.owner}/${repo.repo}@${branch}`
       );
     }
   } catch (error) {
-    setFailed(error.message);
+    setFailed(`⚠️ ${error.message}`);
   }
 };
 
