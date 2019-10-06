@@ -6,7 +6,6 @@ jobs:
   code-style:
     runs-on: ubuntu-latest
     steps:
-      # https://github.com/actions/checkout
       - name: Checkout
         uses: actions/checkout@master
         with:
@@ -15,10 +14,9 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run check:fmt
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
-      # https://github.com/actions/checkout
       - name: Checkout
         uses: actions/checkout@v1
         with:
@@ -27,8 +25,24 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
+      - name: "check for uncommitted changes"
+        # Ensure no changes, but ignore node_modules dir since dev/fresh ci deps installed.
+        run: |
+          git diff --exit-code --stat -- . ':!node_modules' \
+          || (echo "##[error] found changed files after build. please 'npm run build && npm run format'" \
+                  "and check in all changes" \
+              && exit 1)
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - name: Install
+        run: npm ci
       - name: Test
-        run: npm run test
+        run: npm run test:coverage
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master
         with:
@@ -39,10 +53,3 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel-finished: true
-      - name: "check for uncommitted changes"
-        # Ensure no changes, but ignore node_modules dir since dev/fresh ci deps installed.
-        run: |
-          git diff --exit-code --stat -- . ':!node_modules' \
-          || (echo "##[error] found changed files after build. please 'npm run build && npm run format'" \
-                  "and check in all changes" \
-              && exit 1)
