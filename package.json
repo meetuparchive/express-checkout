@@ -9,6 +9,7 @@
     "watch:build": "ncc build src/main.ts --watch --minify",
     "test": "jest",
     "watch:test": "jest --watch",
+    "check:fmt": "prettier --check 'src/**/*.ts' '__tests__/**/*.ts'",
     "fmt": "prettier --write 'src/**/*.ts' '__tests__/**/*.ts'"
   },
   "repository": {

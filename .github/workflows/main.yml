@@ -1,9 +1,21 @@
 name: Main
 
-on: [pull_request, push]
+on: [push]
 
 jobs:
-  build:
+  code-style:
+    runs-on: ubuntu-latest
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+      - name: Install
+        run: npm ci
+      - name: Build
+        run: npm run check:fmt
+  test:
     runs-on: ubuntu-latest
     steps:
       # https://github.com/actions/checkout
