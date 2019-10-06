@@ -23,7 +23,7 @@
 
 > **⚠️ Note:** To use this action, you must have access to the [GitHub Actions](https://github.com/features/actions) feature. GitHub Actions are currently only available in public beta. You can [apply for the GitHub Actions beta here](https://github.com/features/actions/signup/).
 
-## Fast you say?
+## 🏃‍♀️ Fast you say?
 
 Unfortunately, not all code repositories are small. For organizations that structure code within mono repositories, you can find yourself in situations where simply cloning your repository can become an obstical for fast continuous integration. In a stateless and serverless continous integraion system like GitHub Actions you want this to be as fast as possible. That is the goal of this GitHub action.
 
@@ -39,9 +39,9 @@ jobs:
           fetch-depth: 1
 ```
 
-Would take upwards of 6 to 7 minutes _before_ CI could do anything useful. With express-checkout, we've got that down to 1.
+Would take upwards of **6 to 7 minutes** _before_ CI could do anything useful. With express-checkout, we've got that down to **1**.
 
-## usage
+## 🤸 usage
 
 
 In a workflow for example, say `.github/workflows/ci.yml` add the following.
