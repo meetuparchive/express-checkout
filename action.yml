@@ -7,4 +7,4 @@ runs:
   main: 'dist/index.js'
 branding:
   color: 'green'
-  icon: 'package'
+  icon: 'zap'
