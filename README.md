@@ -25,7 +25,7 @@
 
 ## Fast you say?
 
-Unfortunately, not all code repositories are small. For organizations that structure code within mono repositories, you can find yourself in situations where simply cloning your repository can become an obstical for fast continuous integration. In a continous integraion system like GitHub Actions you want this to be as fast as possible. That is the goal of this GitHub action.
+Unfortunately, not all code repositories are small. For organizations that structure code within mono repositories, you can find yourself in situations where simply cloning your repository can become an obstical for fast continuous integration. In a stateless and serverless continous integraion system like GitHub Actions you want this to be as fast as possible. That is the goal of this GitHub action.
 
 We quick realized this with some of our most important repositories when trialing GitHub actions, the default checkout action was less than ideal.
 
