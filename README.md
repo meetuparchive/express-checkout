@@ -43,6 +43,8 @@ Would take upwards of 6 to 7 minutes _before_ CI could do anything useful. With 
 
 ## usage
 
+In a workflow for example, say `.github/workflows/ci.yml` add the following.
+
 ```yaml
 name: CI
 jobs:
