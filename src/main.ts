@@ -1,4 +1,4 @@
-import { setFailed } from "@actions/core";
+import { setFailed, debug } from "@actions/core";
 import { context } from "@actions/github";
 import { exec } from "@actions/exec";
 import { env } from "process";
@@ -65,6 +65,7 @@ class GitCheckout implements Checkout {
       while ((await exec(`git checkout -q ${ref}`)) > 0) {
         //  When repo gets to the max depth of the origin Git silenty turns it into a deep clone
         if (!existsSync(join("scratch"))) {
+          debug("reached maximum depth");
           return 0;
         }
         depth += 2;
