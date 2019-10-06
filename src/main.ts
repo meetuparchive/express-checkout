@@ -73,7 +73,7 @@ class GitCheckout implements Checkout {
         depth += 2;
         if (maxDepth && depth > maxDepth) {
           throw new Error(
-            `Exceeded max checkout depth of ${maxDepth} finding commit ${ref} in ${context.repo}@${branch}`
+            `Exceeded max checkout depth of ${maxDepth} finding commit ${ref} in ${repoUri}@${branch}`
           );
         }
         debug(
