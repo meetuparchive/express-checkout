@@ -14,23 +14,77 @@ export interface Checkout {
   ): Promise<number>;
 }
 
-export class GitCheckout implements Checkout {
-  private cloneToken: string;
-  constructor(cloneToken: string) {
-    this.cloneToken = cloneToken;
-  }
+export interface Git {
+  dir(): Promise<string>;
+  cloneString(
+    cloneToken: string,
+    branch: string,
+    depth: number,
+    repoUri: string,
+    desitination: string
+  ): string;
 
-  async gitDir(): Promise<string> {
+  clone(
+    cloneToken: string,
+    branch: string,
+    depth: number,
+    repoUri: string,
+    desitination: string
+  ): Promise<number>;
+
+  checkoutRef(ref: string): Promise<number>;
+
+  reachedFullDepth(gitDir: string): boolean;
+
+  fetch(depth: number): Promise<number>;
+}
+
+export class DefaultGit implements Git {
+  async dir(): Promise<string> {
     return (await execa("git", ["rev-parse", "--git-dir"])).stdout;
   }
 
   cloneString(
+    cloneToken: string,
     branch: string,
     depth: number,
     repoUri: string,
     desitination: string
   ): string {
-    return `git clone --single-branch --branch ${branch} --depth ${depth} https://${this.cloneToken}:x-oauth-basic@github.com/${repoUri}.git ${desitination}`;
+    return `git clone --single-branch --branch ${branch} --depth ${depth} https://${cloneToken}:x-oauth-basic@github.com/${repoUri}.git ${desitination}`;
+  }
+
+  clone(
+    cloneToken: string,
+    branch: string,
+    depth: number,
+    repoUri: string,
+    desitination: string
+  ): Promise<number> {
+    return exec(
+      this.cloneString(cloneToken, branch, depth, repoUri, desitination)
+    );
+  }
+
+  checkoutRef(ref: string): Promise<number> {
+    return exec(`git checkout -q ${ref}`);
+  }
+
+  reachedFullDepth(gitDir: string): boolean {
+    return !existsSync(join(gitDir, "scratch"));
+  }
+
+  fetch(depth: number): Promise<number> {
+    return exec(`git fetch --depth ${depth} origin`);
+  }
+}
+
+export class GitCheckout implements Checkout {
+  private cloneToken: string;
+  private git: Git;
+  constructor(cloneToken: string, git: Git) {
+    this.cloneToken = cloneToken;
+    this.git = git;
   }
 
   async checkout(
@@ -42,16 +96,19 @@ export class GitCheckout implements Checkout {
   ): Promise<number> {
     let depth = 1;
     const repoUri = `${repo.owner}/${repo.repo}`;
-    const cloneStatus = await exec(
-      this.cloneString(branch, depth, repoUri, desitination)
+    const cloneStatus = await this.git.clone(
+      this.cloneToken,
+      branch,
+      depth,
+      repoUri,
+      desitination
     );
-    if (cloneStatus > 0) {
-      const gitDir = await this.gitDir();
-      while ((await exec(`git checkout -q ${ref}`)) > 0) {
+    if (cloneStatus == 0) {
+      const gitDir = await this.git.dir();
+      while ((await this.git.checkoutRef(ref)) > 0) {
         //  When repo gets to the max depth of the origin Git silenty turns it into a deep clone
-        if (!existsSync(join(gitDir, "scratch"))) {
-          debug("Reached checkout maximum depth");
-          return 0;
+        if (this.git.reachedFullDepth(gitDir)) {
+          throw new Error("Reached checkout maximum depth");
         }
         depth += 2;
         if (maxDepth && depth > maxDepth) {
@@ -62,7 +119,7 @@ export class GitCheckout implements Checkout {
         debug(
           `🤿 Could not find ref ${ref} in ${repoUri}@${branch}. Going deeper...`
         );
-        await exec(`git fetch --depth ${depth} origin`);
+        await this.git.fetch(depth);
       }
     }
     return cloneStatus;

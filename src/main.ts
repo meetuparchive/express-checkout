@@ -1,7 +1,7 @@
 import { setFailed } from "@actions/core";
 import { context } from "@actions/github";
 import { env } from "process";
-import { Checkout, GitCheckout } from "./checkout";
+import { Checkout, GitCheckout, DefaultGit } from "./checkout";
 
 type Env = { [key: string]: string | undefined };
 type Repo = { owner: string; repo: string };
@@ -21,7 +21,7 @@ interface Context {
 
 export const extract = (env: Env, context: Context): Config => {
   const branch = (env.GITHUB_REF || "").split("/")[2];
-  const checkout = new GitCheckout(env.GITHUB_TOKEN || "");
+  const checkout = new GitCheckout(env.GITHUB_TOKEN || "", new DefaultGit());
   const repo = context.repo;
   const ref = context.sha;
   const maxDepth = parseInt(env.INPUT_MAX_DEPTH || "100");
