@@ -88,6 +88,6 @@ jobs:
 
 ## 🗣️shoutouts
 
-This action was inspired in part by [@zoispag's](https://github.com/zoispag) comments[here](https://github.com/actions/checkout/issues/22) as well as the [Concourse CI Git Resource](https://github.com/concourse/git-resource).
+This action was inspired in part by [@zoispag's](https://github.com/zoispag) comments [here](https://github.com/actions/checkout/issues/22) as well as the [Concourse CI Git Resource](https://github.com/concourse/git-resource).
 
 Meetup Inc 2019
