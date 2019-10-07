@@ -29,7 +29,7 @@
 
 ## 🏃‍♀️ Fast you say?
 
-Unfortunately, not all code repositories are small. For organizations that structure code within mono repositories, you can find yourself in situations where simply cloning your repository can become an obstical for fast continuous integration. In a stateless and serverless continous integraion system like GitHub Actions you want this to be as fast as possible. That is the goal of this GitHub action.
+Unfortunately, not all code repositories are small. For organizations that structure code within mono repositories, you can find yourself in situations where simply cloning your repository can become an obstacle for fast continuous integration. In a stateless and serverless continuous integration system like GitHub Actions you want this to be as fast as possible. This is the goal of this GitHub action.
 
 We quick realized this with some of our most important repositories when trialing GitHub actions, the default checkout action was less than ideal.
 
@@ -66,9 +66,9 @@ jobs:
 
 ## ⛏️Digging deeper
 
-> **⚠️ Note:** For private repositories you will want to create a new secret to store a personal access token with `repo` permissions. GitHub actions default `GITHUB_TOKEN` secret does not have the permission to clone your private repository
+> **⚠️ Note:** For private repositories you will want to create a new secret to store a personal access token with `repo` permissions. GitHub actions default `GITHUB_TOKEN` secret does not have the permission to clone your private repository.
 
-This action will attempt to checkout a specific commit within a branch that triggered the action. To do so it may need to "deepen" the shallow checkout. This will by default deepen the checkout to **100**. However, you can provide a custom `max_depth` to limit the amount of depth this action will dig for your commit.
+This action will attempt to checkout a specific commit within a branch that triggered the action. To do so, it may need to "deepen" the shallow checkout. This will by default deepen the checkout to **100**. However, you can provide a custom `max_depth` to limit the amount of depth this action will dig for your commit.
 
 ```yaml
 name: CI
