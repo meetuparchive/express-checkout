@@ -19,7 +19,7 @@
 	</a>
   &nbsp;
   <a href='https://coveralls.io/github/meetup/express-checkout?branch=master'>
-    <img src='https://coveralls.io/repos/github/meetup/express-checkout/badge.svg?branch=master' alt='Coverage Status' />
+    <img src='https://img.shields.io/coveralls/github/meetup/express-checkout' alt='Coverage Status' />
   </a>
 </div>
 
