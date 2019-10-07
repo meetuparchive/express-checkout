@@ -1,7 +1,8 @@
 import { setFailed } from "@actions/core";
 import { context } from "@actions/github";
 import { env } from "process";
-import { Checkout, GitCheckout, DefaultGit } from "./checkout";
+import { Checkout, GitCheckout } from "./checkout";
+import { DefaultGit } from "./git";
 
 type Env = { [key: string]: string | undefined };
 type Repo = { owner: string; repo: string };
