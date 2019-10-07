@@ -16,6 +16,7 @@ export interface Checkout {
 
 export interface Git {
   dir(): Promise<string>;
+
   cloneString(
     cloneToken: string,
     branch: string,
