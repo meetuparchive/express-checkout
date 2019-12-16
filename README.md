@@ -1,4 +1,4 @@
-| > **⚠️ Note:** GitHub [actions/checkout@v2](https://github.com/actions/checkout) has made big leaps and is now comparably fast compared to meetup/express-checkout. Use that instead.
+> **⚠️ Note:** GitHub [actions/checkout@v2](https://github.com/actions/checkout) has made big leaps and is now comparably fast compared to meetup/express-checkout. Use that instead.
 
 <div align="center">
   💳 :octocat:
